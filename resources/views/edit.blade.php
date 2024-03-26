@@ -12,4 +12,4 @@
             @include('form', ['employee' => $employee])
         </form>
     </div>
-</x-app-layout
+</x-app-layout>

@@ -59,7 +59,7 @@ class EmployeeController extends Controller
 
         $request->user()->employees()->create($data);
 
-        // return redirect()->route('employees')->with('success', 'New user added successfully');
+        return redirect()->route('employees')->with('success', 'New user added successfully');
     }
 
 

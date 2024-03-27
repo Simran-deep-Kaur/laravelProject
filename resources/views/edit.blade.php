@@ -11,5 +11,5 @@
             @method('PUT')
             @include('form', ['employee' => $employee])
         </form>
-    </div>
+    </div> 
 </x-app-layout>

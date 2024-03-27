@@ -7,6 +7,7 @@ use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
+use App\Http\Requests\ValidationOfData;
 
 class EmployeeController extends Controller
 {
@@ -28,22 +29,8 @@ class EmployeeController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function store(Request $request)
+    public function store(ValidationOfData $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees',
-            'gender' => 'required',
-            'age' => 'nullable|integer|min:18',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
         $profileImage = $request->file('profile_image');
 
         $profileImageName = null;
@@ -75,20 +62,6 @@ class EmployeeController extends Controller
 
     public function update(Request $request, Employee $employee)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('employees')->ignore($employee->email, 'email')],
-            'gender' => 'required',
-            'age' => 'nullable|integer|min:18',
-            'profile_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
         if ($request->hasFile('profile_image')) {
             $profileImage = $request->file('profile_image');
             $profileImageName = $profileImage->getClientOriginalName();

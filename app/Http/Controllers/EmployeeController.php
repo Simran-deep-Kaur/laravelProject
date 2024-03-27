@@ -19,7 +19,7 @@ class EmployeeController extends Controller
     public function checkEmail(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', Rule::unique('employees')->ignore($request->previousEmail, 'email')],
+            'email' => [Rule::unique('employees')->ignore($request->previousEmail, 'email')],
         ]);
 
         if ($validator->fails()) {
@@ -60,7 +60,7 @@ class EmployeeController extends Controller
         return view('edit', compact('employee'));
     }
 
-    public function update(Request $request, Employee $employee)
+    public function update(ValidationOfData $request, Employee $employee)
     {
         if ($request->hasFile('profile_image')) {
             $profileImage = $request->file('profile_image');
@@ -70,7 +70,7 @@ class EmployeeController extends Controller
         } else {
             $profileImageName = $employee->profile_image;
         }
-
+        
         $data = $request->all();
         $data['profile_image'] = $profileImageName;
         $employee->update($data);

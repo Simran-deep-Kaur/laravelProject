@@ -1,15 +1,15 @@
 <div class="mb-4">
     <label for="name" class="inline-block text-gray-700 text-sm font-bold mb-2">Name</label><span class="text-red-500"> *</span>
-    <input type="text" name="name" id="name" value="{{ old('name') ?? ($employee->name ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <input  type="text" name="name" id="name" value="{{ old('name') ?? ($employee->name ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     @error('name')
-    <p class="text-red-500">{{$message}}</p>
+    <p id="name-error" class="text-red-500">{{$message}}</p>
     @enderror
 </div>
 <div class="mb-4">
     <label for="email" class="inline-block text-gray-700 text-sm font-bold mb-2">Email</label><span class="text-red-500"> *</span>
     <input onkeyup="checkEmail()" type="text" name="email" id="email" value="{{ old('email') ?? ($employee->email ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     @error('email')
-    <p class="text-red-500">{{$message}}</p>
+    <p id="email-error-message" class="text-red-500">{{$message}}</p>
     @enderror
     <div id="email-error" class="text-red-500"></div>
 </div>
@@ -33,9 +33,9 @@
 </div>
 <div class="mb-4">
     <label for="age" class="block text-gray-700 text-sm font-bold mb-2">Age</label>
-    <input type="number" name="age" value="{{ old('age') ?? ($employee->age ?? '') }}" id="age" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <input  type="number" name="age" value="{{ old('age') ?? ($employee->age ?? '') }}" id="age" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     @error('age')
-    <p class="text-red-500">{{$message}}</p>
+    <p id="age-error" class="text-red-500">{{$message}}</p>
     @enderror
 </div>
 <div class="mb-4">
@@ -67,5 +67,25 @@
                 }
             }
         })
+        if (currentEmail !== "") {
+            document.getElementById("email-error-message").innerText = "";
+        }
     }
+
+    // function checkName() {
+    //     let name = document.getElementById("name").value;
+    //     if (name !== "") {
+    //         let nameError = document.getElementById("name-error").value;
+    //         if (nameError !== "") {
+    //             document.getElementById('name-error').innerHTML = "";
+    //         }
+    //     }
+    // }
+
+    // function checkAge() {
+    //     let age = document.getElementById("age").value;
+    //     if (age < 18) {
+    //         document.getElementById('age-error').innerText = "The age field must be at least 18.";
+    //     }
+    // }
 </script>

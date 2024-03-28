@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="py-10">
-            <div class=" max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class=" max-w-8xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -56,31 +56,32 @@
                                 @foreach($employees as $row)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($row->profile_image)
-                                        <img style="max-width:50px; border-radius: 50%" src="{{ asset('storage/uploads/'.$row->profile_image) }}" alt="profile image" title="{{$row->profile_image}}" />
+                                        @if($row['profile_image'])
+                                        <img style="max-width:50px; border-radius: 50%" src="{{ asset('storage/uploads/'.$row['profile_image']) }}" alt="profile image"  />
                                         @else
                                         <img style="max-width:50px; border-radius: 50%" src="{{ asset('storage/uploads/image2.png') }}" alt="default profile image" title="No image uploaded" />
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ $row->name }}
+                                        {{ $row['name'] }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ $row->name_and_email }} 
+                                        {{ $row['name_and_email'] }}
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {{ $row['email'] }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ $row->email }}
+                                        {{ $row['gender'] }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ $row->gender }}
+                                        {{ $row['age'] }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ $row->age }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <a class="inline-block bg-yellow-400 hover:bg-yellow-600 text-dark font-bold py-2 px-4 rounded" href="{{ route('employee.show', $row) }}">View</a>
-                                        <a href="{{route('employee.edit',$row)}}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</a>
-                                        <form id="delete" class="inline-block" action="{{ route('employee.destroy', $row) }}" method="POST">
+                                        <a class="inline-block bg-yellow-400 hover:bg-yellow-600 text-dark font-bold py-2 px-4 rounded" href="{{ route('employee.show', $row['id']) }}">View</a>
+                                        <a href="{{route('employee.edit',$row['id'])}}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</a>
+                                        <form id="delete" class="inline-block" action="{{ route('employee.destroy', $row['id']) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="delete-btn inline-block bg-red-400 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">

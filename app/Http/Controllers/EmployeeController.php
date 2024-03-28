@@ -14,9 +14,7 @@ class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
-        //     return EmployeeResource::collection($request->user()->employees);
-        // dd(EmployeeResource::collection($request->user()->employees));
-        return view('index', ['employees' => EmployeeResource::collection($request->user()->employees)]);
+        return view('index', ['employees' => EmployeeResource::collection($request->user()->employees)->resolve()]);
     }
 
     public function checkEmail(Request $request)
@@ -46,10 +44,9 @@ class EmployeeController extends Controller
         $data = $request->all();
         $data['profile_image'] = $profileImageName;
 
-        $employee = $request->user()->employees()->create($data);
-        // dd($data);
-        return view('index', ['employees' => new EmployeeResource($employee)])->with('success', 'New user added sucessfully.');
-        // return redirect()->route('employees')->with('success', 'New user added successfully');
+        $request->user()->employees()->create($data);
+
+        return redirect()->route('employees')->with('success','New user added successfully');
     }
 
     public function show(Employee $employee)
@@ -77,8 +74,7 @@ class EmployeeController extends Controller
         $data = $request->all();
         $data['profile_image'] = $profileImageName;
         $employee->update($data);
-        return view('index', ['employees' => new EmployeeResource(($employee))])->with('success' . 'User updated successfully');
-        // return redirect()->route('employees')->with('success', 'User updated successfully');
+        return redirect()->route('employees')->with('success','User updated successfully');
     }
 
     public function destroy(Employee $employee)

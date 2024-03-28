@@ -36,6 +36,9 @@
                                         Name
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Name and email
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Email
                                     </th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -61,6 +64,9 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{ $row->name }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {{ $row->name_and_email }} 
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{ $row->email }}

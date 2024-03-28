@@ -8,18 +8,21 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\ValidationOfData;
+use App\Http\Resources\EmployeeResource;
 
 class EmployeeController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request)
     {
-        return view('index', ['employees' => $request->user()->employees]);
+        //     return EmployeeResource::collection($request->user()->employees);
+        // dd(EmployeeResource::collection($request->user()->employees));
+        return view('index', ['employees' => EmployeeResource::collection($request->user()->employees)]);
     }
 
     public function checkEmail(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', Rule::unique('employees')->ignore($request->previousEmail, 'email')],
+            'email' => [Rule::unique('employees')->ignore($request->previousEmail, 'email')],
         ]);
 
         if ($validator->fails()) {
@@ -41,26 +44,26 @@ class EmployeeController extends Controller
         }
 
         $data = $request->all();
-
         $data['profile_image'] = $profileImageName;
 
-        $request->user()->employees()->create($data);
-
-        return redirect()->route('employees')->with('success', 'New user added successfully');
+        $employee = $request->user()->employees()->create($data);
+        // dd($data);
+        return view('index', ['employees' => new EmployeeResource($employee)])->with('success', 'New user added sucessfully.');
+        // return redirect()->route('employees')->with('success', 'New user added successfully');
     }
-
 
     public function show(Employee $employee)
     {
-        return view('show', compact('employee'));
+        // return view('show', compact('employee'));
+        return view('show', ['employee' => new EmployeeResource($employee)]);
     }
 
     public function edit(Employee $employee)
     {
-        return view('edit', compact('employee'));
+        return view('edit', ['employee' => new EmployeeResource($employee)]);
     }
 
-    public function update(Request $request, Employee $employee)
+    public function update(ValidationOfData $request, Employee $employee)
     {
         if ($request->hasFile('profile_image')) {
             $profileImage = $request->file('profile_image');
@@ -74,8 +77,8 @@ class EmployeeController extends Controller
         $data = $request->all();
         $data['profile_image'] = $profileImageName;
         $employee->update($data);
-
-        return redirect()->route('employees')->with('success', 'User updated successfully');
+        return view('index', ['employees' => new EmployeeResource(($employee))])->with('success' . 'User updated successfully');
+        // return redirect()->route('employees')->with('success', 'User updated successfully');
     }
 
     public function destroy(Employee $employee)

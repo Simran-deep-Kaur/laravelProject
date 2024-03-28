@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="py-10">
-            <div class=" max-w-8xl mx-auto sm:px-6 lg:px-8">
+            <div class=" max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -35,9 +35,9 @@
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Name
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                    <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Name and email
-                                    </th>
+                                    </th> -->
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Email
                                     </th>
@@ -65,10 +65,9 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{ $row['name'] }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <!-- <td class="px-6 py-4 whitespace-nowrap">
                                         {{ $row['name_and_email'] }}
-                                    </td>
-
+                                    </td> -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{ $row['email'] }}
                                     </td>

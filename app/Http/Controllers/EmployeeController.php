@@ -9,6 +9,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\ValidationOfData;
 use App\Http\Resources\EmployeeResource;
+use App\Mail\NewEmployeeNotification;
+use Illuminate\Support\Facades\Mail;
 
 class EmployeeController extends Controller
 {
@@ -44,14 +46,15 @@ class EmployeeController extends Controller
         $data = $request->all();
         $data['profile_image'] = $profileImageName;
 
-        $request->user()->employees()->create($data);
+        $employee = $request->user()->employees()->create($data);
 
-        return redirect()->route('employees')->with('success','New user added successfully');
+        Mail::to($request->input('email'))->send(new NewEmployeeNotification($employee));
+        return redirect()->route('employees')->with('success', 'Employee created successfully');
+
     }
 
     public function show(Employee $employee)
     {
-        // return view('show', compact('employee'));
         return view('show', ['employee' => new EmployeeResource($employee)]);
     }
 

@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 use App\Http\Requests\ValidationOfData;
 use App\Http\Resources\EmployeeResource;
 use App\Mail\NewEmployeeNotification;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
 class EmployeeController extends Controller
@@ -18,7 +19,15 @@ class EmployeeController extends Controller
     {
         return view('index', ['employees' => EmployeeResource::collection($request->user()->employees)->resolve()]);
     }
+    public function admins(Request $request)
+    {
+        if ($request->user()->role != 'super-admin') {
+            abort(403, "You are not authorized to check the admins");
+        }
 
+        $users = User::all();
+        return view('admin',compact('users'));
+    }
     public function checkEmail(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -49,8 +58,8 @@ class EmployeeController extends Controller
         $employee = $request->user()->employees()->create($data);
 
         Mail::to($request->input('email'))->send(new NewEmployeeNotification($employee));
-        return redirect()->route('employees')->with('success', 'Employee created successfully');
 
+        return redirect()->route('employees')->with('success', 'Employee created successfully');
     }
 
     public function show(Employee $employee)
@@ -77,7 +86,7 @@ class EmployeeController extends Controller
         $data = $request->all();
         $data['profile_image'] = $profileImageName;
         $employee->update($data);
-        return redirect()->route('employees')->with('success','User updated successfully');
+        return redirect()->route('employees')->with('success', 'User updated successfully');
     }
 
     public function destroy(Employee $employee)

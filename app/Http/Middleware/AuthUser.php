@@ -15,7 +15,8 @@ class AuthUser
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->route('employee')->user_id !== auth()->user()->id) {
+        if ($request->route('employee')->user_id !== auth()->user()->id)
+        {
             return abort( 403, 'You cannot access the employees of other user');
         }
 

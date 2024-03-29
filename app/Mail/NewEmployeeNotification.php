@@ -55,7 +55,6 @@ class NewEmployeeNotification extends Mailable
 
     public function build()
     {
-        return $this->subject('Welcome to Our Company')
-                    ->view('mail',['employee' => $this->employee]);
+        return $this->view('mail',['employee' => $this->employee]);
     }
 }

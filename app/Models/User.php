@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use ILluminate\Database\Eloquent\Relations\HasMany;
-
+use App\Models\Role;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'age',
+        'profile_image',
+        'gender',
     ];
 
     /**
@@ -49,6 +52,16 @@ class User extends Authenticatable
     public function employees()
     {
         return $this->hasMany(Employee::class);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
     }
 }
 

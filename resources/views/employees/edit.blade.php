@@ -9,7 +9,7 @@
         <form enctype="multipart/form-data" method="POST" action="{{route('employee.update',[$employee])}}" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             @csrf
             @method('PUT')
-            @include('form', ['employee' => $employee])
+            @include('common.form', ['data' => $employee])
         </form>
     </div> 
 </x-app-layout>

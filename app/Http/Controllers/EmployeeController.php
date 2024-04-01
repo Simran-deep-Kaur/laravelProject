@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\ValidationOfData;
 use App\Http\Resources\EmployeeResource;
@@ -17,17 +16,28 @@ class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
-        return view('index', ['employees' => EmployeeResource::collection($request->user()->employees)->resolve()]);
-    }
-    public function admins(Request $request)
-    {
-        if ($request->user()->role != 'super-admin') {
-            abort(403, "You are not authorized to check the admins");
+        if ($request->user()->hasRole('super-admin')) {
+            $users = User::all();
+            if ($request->has('filter')) {
+                $filter = $request->input('filter');
+                if ($filter == 'all') {
+                    $data = EmployeeResource::collection(Employee::all())->resolve();
+                } else {
+                    $user = User::findOrFail($filter);
+                    $data = EmployeeResource::collection($user->employees)->resolve();
+                }
+            } else {
+                $data = EmployeeResource::collection(Employee::all())->resolve();
+            }
+        } else {
+            $users = collect([$request->user()]);
+            // dd($request->user());
+            $data = EmployeeResource::collection($request->user()->employees)->resolve();
         }
 
-        $users = User::all();
-        return view('admin',compact('users'));
+        return view('employees.index', compact('data', 'users'));
     }
+    
     public function checkEmail(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -64,12 +74,12 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        return view('show', ['employee' => new EmployeeResource($employee)]);
+        return view('employees.show', ['employee' => new EmployeeResource($employee)]);
     }
 
     public function edit(Employee $employee)
     {
-        return view('edit', ['employee' => new EmployeeResource($employee)]);
+        return view('employees.edit', ['employee' => new EmployeeResource($employee)]);
     }
 
     public function update(ValidationOfData $request, Employee $employee)

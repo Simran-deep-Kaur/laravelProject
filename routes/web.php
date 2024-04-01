@@ -1,5 +1,6 @@
 <?php
-
+require __DIR__ . '/auth.php';
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuperAdminController;
@@ -19,7 +20,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
     Route::get('/employees/create', function () {
-        return view('create');
+        return view('employees.create');
     });
     Route::post('/employees/create', [EmployeeController::class, 'store'])->name('employee.store');
     Route::middleware(AuthUser::class)->group(function () {
@@ -31,6 +32,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::post('/employees/check-email', [EmployeeController::class, 'checkEmail'])->name('employee.checkEmail');
-
-Route::get('/admins', [EmployeeController::class, 'admins'])->name('admins');
-require __DIR__ . '/auth.php';
+Route::get('/admins/create', function(){
+    return view('admins.create');
+});
+Route::post('/admins/create',[AdminController::class, 'store'])->name('admin.store');
+Route::get('/admins', [AdminController::class, 'index'])->name('admins');
+Route::get('/admins/{user}/show', [AdminController::class, 'show'])->name('admin.show');
+Route::get('/admins/{user}/edit',[AdminController::class, 'edit'])->name('admin.edit');
+Route::delete('/admins/{user}/delete',[AdminController::class,'destroy'])->name('admin.destroy');
+Route::put('/admins/{user}/update',[AdminController::class, 'update'])->name('admin.update');

@@ -17,11 +17,13 @@
                         {{ __('Employees') }}
                     </x-nav-link>
                 </div>
+                @if (auth()->user()->hasRole('super-admin'))
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('employee.store')" :active=" request()->is('employees/create')">
-                        {{ __('Create New Employee') }}
+                    <x-nav-link :href="route('admins')" :active=" request()->is('admins')">
+                        {{ __('Admins') }}
                     </x-nav-link>
                 </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->

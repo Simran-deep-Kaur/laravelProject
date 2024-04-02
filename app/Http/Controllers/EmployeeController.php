@@ -16,32 +16,25 @@ class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->user()->hasRole('super-admin')) {
-            $users = User::all();
-            if ($request->has('filter')) {
-                $filter = $request->input('filter');
-                if ($filter == 'all') {
-                    $data = EmployeeResource::collection(Employee::all())->resolve();
-                } else {
-                    $user = User::findOrFail($filter);
-                    $data = EmployeeResource::collection($user->employees)->resolve();
-                }
-            } else {
-                $data = EmployeeResource::collection(Employee::all())->resolve();
-            }
+        $users = User::all();
+        if (!$request->user()->hasRole('super-admin')) {
+            $employees = $request->user()->employees;
+
+            $users = [];
         } else {
-            $users = collect([$request->user()]);
-            // dd($request->user());
-            $data = EmployeeResource::collection($request->user()->employees)->resolve();
+            $employees = (!$request->has('filter') || ($request->input('filter') == "all"))
+                ? Employee::all()
+                : User::find($request->input('filter'))->employees;
         }
+
+        $data = EmployeeResource::collection($employees)->resolve();
 
         return view('employees.index', compact('data', 'users'));
     }
-    
     public function checkEmail(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => [Rule::unique('employees')->ignore($request->previousEmail, 'email')],
+            'email' => [Rule::unique('employees')->ignore($request->Id, 'id')],
         ]);
 
         if ($validator->fails()) {
@@ -103,6 +96,6 @@ class EmployeeController extends Controller
     {
         $employee->delete();
 
-        return redirect()->route('employees')->with('success', 'User deleted successfully');
+        return redirect()->back()->with('success', 'User deleted successfully');
     }
 }

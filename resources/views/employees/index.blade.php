@@ -13,7 +13,7 @@
                         Add User
                     </a>
                 </div>
-                @if($users->count() > 1)
+                @if($users)
                 <div class="p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 flex items-center">
                     <form action="{{ route('employees') }}" method="GET" class="flex">
                         <select name="filter" id="filter" onchange="this.form.submit()" class="inline-block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:focus:ring-gray-600 dark:focus:border-gray-600 rounded-md mr-2">

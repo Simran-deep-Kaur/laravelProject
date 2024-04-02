@@ -22,9 +22,10 @@ class EmployeeResource extends JsonResource
             'age' => $this->age,
             'profile_image' => $this->profile_image,
             'user_id' => $this->user_id,
-            'edit_url' => route('employee.edit',$this->id),
-            'delete_url'=>route('employee.destroy',$this->id),
-            'show_url'=>route('employee.show',$this->id),
+            'edit_url' => route('employee.edit', $this->id),
+            'delete_url'=>route('employee.destroy', $this->id),
+            'show_url'=>route('employee.show', $this->id),
+            'check_email_url'=>route('employee.checkEmail'),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
         ];

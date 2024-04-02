@@ -12,16 +12,15 @@ class ValidationAdmin extends FormRequest
         return true;
     }
 
-   public function rules(): array
+    public function rules(): array
     {
-        // dd($this->userData);
-        $emailRule = ($this->employee)
+        $emailRule = ($this->user)
             ? Rule::unique('users')->ignore($this->user->id, 'id')
             : 'unique:users,email';
 
         return [
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email',$emailRule],
+            'email' => ['required', 'email', $emailRule],
             'gender' => 'nullable',
             'age' => 'nullable|integer|min:18',
             'profile_image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',

@@ -1,8 +1,14 @@
 <div class="mb-4">
     <label for="name" class="inline-block text-gray-700 text-sm font-bold mb-2">Name</label><span class="text-red-500"> *</span>
-    <input type="text" name="name" id="name" value="{{ old('name') ?? ($data->name ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <input
+        type="text"
+        name="name"
+        id="name"
+        value="{{ old('name') ?? ($data->name ?? '') }}"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" >
+
     @error('name')
-    <p class="text-red-500">{{$message}}</p>
+        <p class="text-red-500">{{$message}}</p>
     @enderror
 </div>
 <div class="mb-4">
@@ -10,7 +16,7 @@
     <input onkeyup="checkEmail()" type="text" name="email" id="email" value="{{ old('email') ?? ($data->email ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     @error('email')
     <p class="text-red-500">{{$message}}</p>
-    @enderror
+        @enderror
     <div id="email-error" class="text-red-500"></div>
 </div>
 <div class="mb-4">
@@ -28,14 +34,14 @@
         <label for="other" class="text-gray-700">Other</label>
     </div>
     @error('gender')
-    <p class="text-red-500">{{$message}}</p>
+        <p class="text-red-500">{{$message}}</p>
     @enderror
 </div>
 <div class="mb-4">
     <label for="age" class="block text-gray-700 text-sm font-bold mb-2">Age</label>
     <input type="number" name="age" value="{{ old('age') ?? ($data->age ?? '') }}" id="age" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     @error('age')
-    <p class="text-red-500">{{$message}}</p>
+        <p class="text-red-500">{{$message}}</p>
     @enderror
 </div>
 <div class="mb-4">
@@ -46,26 +52,20 @@
     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
 </div>
 
-
 <script>
     function checkEmail() {
-        let currentEmail = document.getElementById("email").value;
-        let previousEmail = "{{ $data->email ?? '' }}";
         $.ajax({
-            url: "{{ route('employee.checkEmail') }}",
+            url: "{{ $url }}",
             method: "POST",
             data: {
                 "_token": "{{csrf_token()}}",
-                'email': currentEmail,
-                'previousEmail': previousEmail,
+                'email': document.getElementById("email").value,
+                'Id': "{{ $data->id ?? '' }}",
             },
             success: function(response) {
-                if (response.status === "error") {
-                    document.getElementById("email-error").innerText = response.message;
-                } else {
-                    document.getElementById("email-error").innerText = "";
-                }
+                document.getElementById("email-error").innerText = response.message ?? '';
             }
         })
     }
 </script>
+

@@ -11,6 +11,7 @@ use App\Http\Resources\EmployeeResource;
 use App\Mail\NewEmployeeNotification;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -23,13 +24,30 @@ class EmployeeController extends Controller
             $users = [];
         } else {
             $employees = (!$request->has('filter') || ($request->input('filter') == "all"))
-                ? Employee::all()
-                : User::find($request->input('filter'))->employees;
+                ? Employee::join('users', 'employees.user_id', '=', 'users.id')
+                ->select('employees.*', 'users.name as creator')
+                ->orderBy('employees.name','asc')
+                ->get()
+                : Employee::join('users', 'employees.user_id', '=', 'users.id')
+                ->where('users.id', $request->input('filter'))
+                ->select('employees.*', 'users.name as creator')
+                ->orderBy('employees.name','asc')
+                ->get();
         }
 
         $data = EmployeeResource::collection($employees)->resolve();
 
         return view('employees.index', compact('data', 'users'));
+    }
+    
+    public function testJoin()
+    {
+        $employees = DB::table('users')
+        ->join('employees','employees.user_id', '=', 'users.id')
+        ->select('employees.*', 'users.name as creator')
+        ->get();
+
+        return $employees;
     }
     public function checkEmail(Request $request)
     {
@@ -65,13 +83,23 @@ class EmployeeController extends Controller
         return redirect()->route('employees')->with('success', 'Employee created successfully');
     }
 
-    public function show(Employee $employee)
+    public function show(Request $request, Employee $employee)
     {
+            $employee = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
+            ->where('employees.id', $employee->id)
+            ->select('employees.*', 'users.name as creator')
+            ->first();
+           
         return view('employees.show', ['employee' => new EmployeeResource($employee)]);
     }
 
-    public function edit(Employee $employee)
+    public function edit(Request $request, Employee $employee)
     {
+        $employee = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
+        ->where('employees.id', $employee->id)
+        ->select('employees.*', 'users.name as creator')
+        ->first();
+        
         return view('employees.edit', ['employee' => new EmployeeResource($employee)]);
     }
 

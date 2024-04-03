@@ -45,6 +45,5 @@ Route::middleware(AuthSuperAdmin::class)->group(function () {
     Route::put('/admins/{user}/update', [AdminController::class, 'update'])->name('admin.update');
 });
 Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
-
-
-
+Route::get('/test',[EmployeeController::class, 'testJoin']);
+Route::get('/users-roles',[AdminController::class, 'userRoles']);

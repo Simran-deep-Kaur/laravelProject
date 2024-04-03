@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'show_url'=>route('admin.show',$this->id),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
+            'role'=>$this->role,
         ];
     }
 }

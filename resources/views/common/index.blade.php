@@ -27,6 +27,16 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Age
                             </th>
+                            @if(isset($data[0]['creator']))
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Creator
+                            </th>
+                            @endif
+                            @if(isset($data[0]['role']))
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Role
+                            </th>
+                            @endif
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Status
                             </th>
@@ -54,6 +64,21 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 {{ $row['age'] }}
                             </td>
+                            @if(isset($row['creator']))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ $row['creator'] }}
+                            </td>
+                            @endif
+                            @if(isset($row['role']))
+                            <td class="px-6 py-4 whitespace-nowrap">
+                               <ul>
+                                
+                                @foreach (explode(',', $row['role']) as $role)
+                                    <li class="list-disc">{{ $role }}</li>
+                                @endforeach
+                               </ul>
+                            </td>
+                            @endif
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <a class="inline-block bg-yellow-400 hover:bg-yellow-600 text-dark font-bold py-2 px-4 rounded" href="{{ $row['show_url'] }}" >View</a>
                                 <a href="{{ $row['edit_url'] }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</a>

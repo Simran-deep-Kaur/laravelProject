@@ -28,6 +28,7 @@ class EmployeeResource extends JsonResource
             'check_email_url'=>route('employee.checkEmail'),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at,
+            'creator' => $this->creator,
         ];
     }
 }

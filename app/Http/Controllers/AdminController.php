@@ -9,17 +9,32 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $data = User::whereHas('roles', function ($query) {
-            $query->where('name', 'admin');
-        })->get();
+        $data = User::join('role_user', 'users.id', '=', 'role_user.user_id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->whereNotIn('users.id', [$request->user()->id])
+            ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
+            ->groupBy('users.id')
+            ->orderBy('users.name', 'asc')
+            ->get();
         return view('admins.index', ['data' => UserResource::collection($data)->resolve()]);
     }
 
+    public function userRoles()
+    {
+        $usersWithRoles = DB::table('users')
+            ->join('role_user', 'users.id', '=', 'role_user.user_id')
+            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
+            ->groupBy('users.id')
+            ->get();
+        return $usersWithRoles;
+    }
     public function checkEmail(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -62,12 +77,26 @@ class AdminController extends Controller
 
     public function show(User $user)
     {
+        $user = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
+            ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
+            ->where('users.id', $user->id)
+            ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
+            ->groupBy('users.id')
+            ->first();
+
         return view('admins.show', ['user' => new UserResource($user)]);
     }
 
 
     public function edit(User $user)
     {
+        $user = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
+            ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
+            ->where('users.id', $user->id)
+            ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
+            ->groupBy('users.id')
+            ->first();
+
         return view('admins.edit', ['user' => new UserResource($user)]);
     }
 

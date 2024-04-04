@@ -32,18 +32,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-Route::post('/employees/check-email', [EmployeeController::class, 'checkEmail'])->name('employee.checkEmail');
-Route::post('/admins/check-email', [AdminController::class, 'checkEmail'])->name('admins.checkEmail');
+Route::post('/employees/validate-email', [EmployeeController::class, 'validateEmail'])->name('employee.validateEmail');
+Route::post('/admins/validate-email', [AdminController::class, 'validateEmail'])->name('admins.validateEmail');
 Route::get('/admins/create', function () {
     return view('admins.create');
 });
 Route::middleware(AuthSuperAdmin::class)->group(function () {
+    Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
     Route::get('/admins', [AdminController::class, 'index'])->name('admins');
     Route::get('/admins/{user}/show', [AdminController::class, 'show'])->name('admin.show');
     Route::get('/admins/{user}/edit', [AdminController::class, 'edit'])->name('admin.edit');
     Route::delete('/admins/{user}/delete', [AdminController::class, 'destroy'])->name('admin.destroy');
     Route::put('/admins/{user}/update', [AdminController::class, 'update'])->name('admin.update');
 });
-Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
-Route::get('/test',[EmployeeController::class, 'testJoin']);
-Route::get('/users-roles',[AdminController::class, 'userRoles']);

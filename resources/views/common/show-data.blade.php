@@ -4,12 +4,12 @@
             <div
                 class="p-6 m-6 border rounded-md bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
                 <div class="flex justify-center">
-                    @if($data->profile_image)
-                    <img title="{{ $data->profile_image }}" style="border-radius: 50%; max-width:100px"
-                        src="{{asset('storage/uploads/'.$data->profile_image)}}" alt="">
+                    @if($data->profile_url)
+                    <img title="{{ $data->profile_url }}" style="border-radius: 50%; max-width:100px"
+                        src="{{ $data->profile_url }}" alt="">
                     @else
                     <img title="No image uploaded" style="border-radius: 50%; max-width:100px"
-                        src="{{asset('storage/uploads/image2.png'.$data->profile_image)}}" alt="">
+                        src="{{asset('storage/uploads/image2.png')}}" alt="">
                     @endif
                 </div>
                 <div class="my-6">

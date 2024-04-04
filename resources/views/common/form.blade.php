@@ -13,7 +13,7 @@
 </div>
 <div class="mb-4">
     <label for="email" class="inline-block text-gray-700 text-sm font-bold mb-2">Email</label><span class="text-red-500"> *</span>
-    <input onkeyup="checkEmail()" type="text" name="email" id="email" value="{{ old('email') ?? ($data->email ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <input onkeyup="validateEmail()" type="text" name="email" id="email" value="{{ old('email') ?? ($data->email ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
     @error('email')
     <p class="text-red-500">{{$message}}</p>
         @enderror
@@ -53,7 +53,7 @@
 </div>
 
 <script>
-    function checkEmail() {
+    function validateEmail() {
         $.ajax({
             url: "{{ $url }}",
             method: "POST",

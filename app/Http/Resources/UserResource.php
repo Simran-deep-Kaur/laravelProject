@@ -15,7 +15,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'gender' => $this->gender,
             'age' => $this->age,
-            'profile_image' => $this->profile_image,
+            'profile_url' => asset('show-image/' . $this->profile_image),
             'edit_url' => route('admin.edit',$this->id),
             'delete_url'=>route('admin.destroy',$this->id),
             'show_url'=>route('admin.show',$this->id),

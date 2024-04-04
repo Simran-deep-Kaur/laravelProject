@@ -46,10 +46,10 @@
                         @foreach($data as $row)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($row['profile_image'])
-                                <img style="max-width:50px; border-radius: 50%" src="{{ asset('storage/uploads/'.$row['profile_image']) }}" alt="profile image" />
+                                @if($row['profile_url'] && Str::contains($row['profile_url'], '/show-image/'))
+                                <img style="max-width:50px; border-radius: 50%" src="{{ $row['profile_url'] }}" alt="profile image" />
                                 @else
-                                <img style="max-width:50px; border-radius: 50%" src="{{ asset('storage/uploads/image2.png') }}" alt="default profile image" title="No image uploaded" />
+                                <img style="max-width:50px; border-radius: 50%" src="{{asset('storage/uploads/image2.png')}}" alt="default profile image" title="No image uploaded" />
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">

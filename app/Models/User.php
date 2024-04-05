@@ -69,5 +69,3 @@ class User extends Authenticatable
         return date('d-M-Y', strtotime($value));
     }
 }
-
-

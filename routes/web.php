@@ -49,3 +49,6 @@ Route::middleware(AuthSuperAdmin::class)->group(function () {
 Route::get('/markdown', function(){
     return view('admins.first-file');
 });
+Route::get('/test', function(){
+    return view('admins.test');
+});

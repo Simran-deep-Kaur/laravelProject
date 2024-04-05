@@ -19,12 +19,8 @@ class EmployeeController extends Controller
     {
         $users = User::all();
 
-        $employeeQuery = Employee::join(
-            'users',
-            'employees.user_id',
-            '=',
-            'users.id'
-        )->select('employees.*', 'users.name as creator')->orderBy('employees.created_at', 'desc');
+        $employeeQuery = Employee::join('users', 'employees.user_id', '=', 'users.id')
+            ->select('employees.*', 'users.name as creator')->orderBy('employees.created_at', 'desc');
 
         if (!$request->user()->hasRole('super-admin')) {
             $users = [];
@@ -36,9 +32,9 @@ class EmployeeController extends Controller
                 ? $employeeQuery->get()
                 : $employeeQuery->where('users.id', $request->input('filter'))->get();
         }
-        // dd($employee->name_and_email);
+
         $data = EmployeeResource::collection($employees)->resolve();
-       
+
         return view('employees.index', compact('data', 'users'));
     }
 
@@ -77,7 +73,7 @@ class EmployeeController extends Controller
 
         $profileUrl = asset('show-image/' . $employee->profile_image);
         $employee->profile_url = $profileUrl;
-       
+
 
         return view('employees.show', ['employee' => new EmployeeResource($employee)]);
     }

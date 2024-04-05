@@ -79,6 +79,8 @@ class AdminController extends Controller
             ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
             ->groupBy('users.id')
             ->first();
+        $profileUrl = asset('show-image/' . $user->profile_image);
+        $user->profile_url = $profileUrl;
 
         return view('admins.show', ['user' => new UserResource($user)]);
     }

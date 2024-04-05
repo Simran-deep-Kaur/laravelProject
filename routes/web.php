@@ -45,3 +45,7 @@ Route::middleware(AuthSuperAdmin::class)->group(function () {
     Route::delete('/admins/{user}/delete', [AdminController::class, 'destroy'])->name('admin.destroy');
     Route::put('/admins/{user}/update', [AdminController::class, 'update'])->name('admin.update');
 });
+
+Route::get('/markdown', function(){
+    return view('admins.first-file');
+});

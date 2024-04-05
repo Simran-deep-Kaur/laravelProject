@@ -63,6 +63,11 @@ class User extends Authenticatable
     {
         return $this->roles()->where('name', $role)->exists();
     }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return date('d-M-Y', strtotime($value));
+    }
 }
 
 

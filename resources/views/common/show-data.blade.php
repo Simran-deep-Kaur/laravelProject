@@ -13,6 +13,11 @@
                     @endif
                 </div>
                 <div class="my-6">
+                   @if ($data->unique_id)
+                   <p class="my-2">
+                    <strong>Unique ID:</strong> {{ $data->unique_id }}
+                </p>
+                   @endif
                     <p class="my-2">
                         <strong>Name:</strong> {{ $data->name }}
                     </p>

@@ -1,5 +1,5 @@
 <div class="py-10">
-    <div class=" max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class=" max-w-8xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -32,6 +32,9 @@
                                 Creator
                             </th>
                             @endif
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Date
+                            </th>
                             @if(isset($data[0]['role']))
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Role
@@ -69,6 +72,9 @@
                                 {{ $row['creator'] }}
                             </td>
                             @endif
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ $row['created_at'] }}
+                            </td>
                             @if(isset($row['role']))
                             <td class="px-6 py-4 whitespace-nowrap">
                                <ul>

@@ -36,9 +36,9 @@ class EmployeeController extends Controller
                 ? $employeeQuery->get()
                 : $employeeQuery->where('users.id', $request->input('filter'))->get();
         }
-
+        // dd($employee->name_and_email);
         $data = EmployeeResource::collection($employees)->resolve();
-
+       
         return view('employees.index', compact('data', 'users'));
     }
 
@@ -77,6 +77,7 @@ class EmployeeController extends Controller
 
         $profileUrl = asset('show-image/' . $employee->profile_image);
         $employee->profile_url = $profileUrl;
+       
 
         return view('employees.show', ['employee' => new EmployeeResource($employee)]);
     }

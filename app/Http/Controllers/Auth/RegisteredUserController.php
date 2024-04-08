@@ -46,6 +46,7 @@ class RegisteredUserController extends Controller
         $user->roles()->attach(
             Role::where('name', 'admin')->first()->id
         );
+        $user->active_time = now();
 
         Auth::login($user);
 

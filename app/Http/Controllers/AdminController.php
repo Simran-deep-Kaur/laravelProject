@@ -62,6 +62,7 @@ class AdminController extends Controller
             'age' => $request->age,
             'gender' => $request->gender,
             'profile_image' => $profileImage,
+            'active_time' => now()
         ]);
 
         $user->roles()->attach(

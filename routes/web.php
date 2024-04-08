@@ -7,18 +7,19 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AuthSuperAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthUser;
+use App\Http\Middleware\UpdateUserActivity;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', UpdateUserActivity::class)->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', UpdateUserActivity::class])->group(function () {
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
     Route::get('/employees/create', function () {
         return view('employees.create');
@@ -34,10 +35,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::post('/employees/validate-email', [EmployeeController::class, 'validateEmail'])->name('employee.validateEmail');
 Route::post('/admins/validate-email', [AdminController::class, 'validateEmail'])->name('admins.validateEmail');
-Route::get('/admins/create', function () {
-    return view('admins.create');
-});
-Route::middleware(AuthSuperAdmin::class)->group(function () {
+
+Route::middleware(AuthSuperAdmin::class, UpdateUserActivity::class)->group(function () {
+    Route::get('/admins/create', function () { return view('admins.create'); });
     Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
     Route::get('/admins', [AdminController::class, 'index'])->name('admins');
     Route::get('/admins/{user}/show', [AdminController::class, 'show'])->name('admin.show');
@@ -46,6 +46,6 @@ Route::middleware(AuthSuperAdmin::class)->group(function () {
     Route::put('/admins/{user}/update', [AdminController::class, 'update'])->name('admin.update');
 });
 
-Route::get('/markdown', function(){
+Route::get('/markdown', function () {
     return view('admins.first-file');
 });

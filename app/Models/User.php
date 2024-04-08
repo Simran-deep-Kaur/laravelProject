@@ -24,6 +24,7 @@ class User extends Authenticatable
         'age',
         'profile_image',
         'gender',
+        'active_time'
     ];
 
     /**

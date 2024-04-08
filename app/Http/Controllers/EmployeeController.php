@@ -10,6 +10,7 @@ use App\Http\Requests\ValidationOfData;
 use App\Http\Resources\EmployeeResource;
 use App\Mail\NewEmployeeNotification;
 use App\Models\User;
+use DateTime;
 use Faker\Core\File;
 use Illuminate\Support\Facades\Mail;
 
@@ -36,9 +37,9 @@ class EmployeeController extends Controller
                 ? $employeeQuery->get()
                 : $employeeQuery->where('users.id', $request->input('filter'))->get();
         }
-        // dd($employee->name_and_email);
+
         $data = EmployeeResource::collection($employees)->resolve();
-       
+
         return view('employees.index', compact('data', 'users'));
     }
 
@@ -65,6 +66,8 @@ class EmployeeController extends Controller
 
         // Mail::to($request->input('email'))->send(new NewEmployeeNotification($employee));
 
+     
+
         return redirect()->route('employees')->with('success', 'Employee created successfully');
     }
 
@@ -77,7 +80,7 @@ class EmployeeController extends Controller
 
         $profileUrl = asset('show-image/' . $employee->profile_image);
         $employee->profile_url = $profileUrl;
-       
+
 
         return view('employees.show', ['employee' => new EmployeeResource($employee)]);
     }
@@ -88,6 +91,8 @@ class EmployeeController extends Controller
             ->where('employees.id', $employee->id)
             ->select('employees.*', 'users.name as creator')
             ->first();
+
+ 
 
         return view('employees.edit', ['employee' => new EmployeeResource($employee)]);
     }
@@ -108,10 +113,11 @@ class EmployeeController extends Controller
         $data['profile_image'] = $profileImageName;
         $employee->update($data);
 
+
         return redirect()->route('employees')->with('success', 'User updated successfully');
     }
 
-    public function destroy(Employee $employee)
+    public function destroy(Employee $employee, Request $request)
     {
 
         $image_path = public_path("show-image/") . $employee->profile_image;
@@ -121,6 +127,9 @@ class EmployeeController extends Controller
         }
 
         $employee->delete();
+
+       
+
         return redirect()->back()->with('success', 'User deleted successfully');
     }
 }

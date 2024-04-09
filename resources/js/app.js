@@ -6,7 +6,7 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-document.querySelectorAll(".delete-btn").forEach((button) => {
+document.querySelectorAll(".delete-button").forEach((button) => {
     button.addEventListener("click", (event) => {
         event.preventDefault();
         Swal.fire({
@@ -30,5 +30,20 @@ document.querySelectorAll(".delete-btn").forEach((button) => {
     });
 });
 
+document.querySelectorAll(".button-click").forEach((button)=>{
+    let url = '/employees/button-click';
 
-
+    button.addEventListener("click", () => {
+        var csrfToken = document.getElementById('csrf_token').value;
+        $.ajax({
+            url: url,
+            method: "POST",
+            data: {
+                "_token": csrfToken,
+            },
+            success: function (){
+                console.log("updated time");
+            }
+        })
+    })
+})

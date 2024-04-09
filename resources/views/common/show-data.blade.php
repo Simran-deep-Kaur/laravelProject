@@ -4,45 +4,40 @@
             <div
                 class="p-6 m-6 border rounded-md bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
                 <div class="flex justify-center">
-                    @if($data->profile_url && Str::contains($data->profile_url, '/show-image/'))
-                    <img title="{{ $data->profile_url }}" style="border-radius: 50%; max-width:100px"
-                        src="{{ $data->profile_url }}" alt="">
-                    @else
-                    <img title="No image uploaded" style="border-radius: 50%; max-width:100px"
-                        src="{{asset('storage/uploads/image2.png')}}" alt="">
-                    @endif
+                    <img title="{{ $data['profile_url'] }}" style="border-radius: 50%; max-width:100px"
+                        src="{{ $data['profile_url'] }}" alt="">
                 </div>
                 <div class="my-6">
-                   @if ($data->unique_id)
-                   <p class="my-2">
-                    <strong>Unique ID:</strong> {{ $data->unique_id }}
-                </p>
+                    @if(isset($data['unique_id']))
+                    <p class="my-2">
+                        <strong>Unique ID:</strong> {{ $data['unique_id'] }}
+                    </p>
                    @endif
                     <p class="my-2">
-                        <strong>Name:</strong> {{ $data->name }}
+                        <strong>Name:</strong> {{ $data['name'] }}
                     </p>
                     <p class="my-2">
-                        <strong>Email:</strong> {{ $data->email }}
+                        <strong>Email:</strong> {{ $data['email'] }}
                     </p>
-                    @if($data->gender)
+                    @if($data['gender'])
                     <p class="my-2">
-                        <strong>Gender:</strong> {{ $data->gender }}
+                        <strong>Gender:</strong> {{ $data['gender'] }}
                     </p>
                     @endif
-                    @if ($data->age)
+                    @if ($data['age'])
                     <p class="my-2">
-                        <strong>Age:</strong> {{ $data->age }}
+                        <strong>Age:</strong> {{ $data['age'] }}
                     </p>
                     @endif
-                    @if( $data->creator)
+                    @if(isset($data['creator']))
                     <p class='my-2'>
-                        <strong>Creator:</strong> {{ $data->creator }}
+                        <strong>Creator:</strong> {{ $data['creator'] }}
                     </p>
                     @endif
-                    @if( $data->role)
+                    @if(isset($data['role']))
                     <p class='my-2'>
                         <strong>Role:</strong> 
-                        @foreach (explode(",", $data->role) as $role )
+                        @foreach (explode(",", $data['role']) as $role )
                             <li>{{ $role }}</li>                            
                         @endforeach
                     </p>

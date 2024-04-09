@@ -7,23 +7,20 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AuthSuperAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthUser;
-use App\Http\Middleware\UpdateUserActivity;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth', UpdateUserActivity::class)->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified', UpdateUserActivity::class])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
-    Route::get('/employees/create', function () {
-        return view('employees.create');
-    });
+    Route::view('/employees/create', 'employees.create')->name('employee.create');
     Route::post('/employees/create', [EmployeeController::class, 'store'])->name('employee.store');
     Route::middleware(AuthUser::class)->group(function () {
         Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
@@ -35,9 +32,10 @@ Route::middleware(['auth', 'verified', UpdateUserActivity::class])->group(functi
 
 Route::post('/employees/validate-email', [EmployeeController::class, 'validateEmail'])->name('employee.validateEmail');
 Route::post('/admins/validate-email', [AdminController::class, 'validateEmail'])->name('admins.validateEmail');
+Route::post('/employees/button-click', [EmployeeController::class, 'buttonClick'])->name('employee.buttonClick');
 
-Route::middleware(AuthSuperAdmin::class, UpdateUserActivity::class)->group(function () {
-    Route::get('/admins/create', function () { return view('admins.create'); });
+Route::middleware(AuthSuperAdmin::class)->group(function () {
+    Route::view('/admins/create', 'admins.create')->name('admins.create');
     Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
     Route::get('/admins', [AdminController::class, 'index'])->name('admins');
     Route::get('/admins/{user}/show', [AdminController::class, 'show'])->name('admin.show');

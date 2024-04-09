@@ -10,8 +10,6 @@ use App\Http\Requests\ValidationOfData;
 use App\Http\Resources\EmployeeResource;
 use App\Mail\NewEmployeeNotification;
 use App\Models\User;
-use DateTime;
-use Faker\Core\File;
 use Illuminate\Support\Facades\Mail;
 
 class EmployeeController extends Controller
@@ -20,17 +18,15 @@ class EmployeeController extends Controller
     {
         $users = User::all();
 
-        $employeeQuery = Employee::join(
-            'users',
-            'employees.user_id',
-            '=',
-            'users.id'
-        )->select('employees.*', 'users.name as creator')->orderBy('employees.created_at', 'desc');
+        $employeeQuery = Employee::join('users', 'employees.user_id', '=', 'users.id')
+            ->select('employees.*', 'users.name as creator')
+            ->orderBy('employees.created_at', 'desc');
 
         if (!$request->user()->hasRole('super-admin')) {
             $users = [];
 
-            $employees = $employeeQuery->where('employees.user_id', $request->user()->id)
+            $employees = $employeeQuery
+                ->where('employees.user_id', $request->user()->id)
                 ->get();
         } else {
             $employees = (!$request->has('filter') || ($request->input('filter') == "all"))
@@ -56,6 +52,11 @@ class EmployeeController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+    public function buttonClick(Request $request)
+    {
+        $request->user()->update(['active_time' => now()]);
+    }
+
     public function store(ValidationOfData $request)
     {
         $data = $request->all();
@@ -66,37 +67,30 @@ class EmployeeController extends Controller
 
         // Mail::to($request->input('email'))->send(new NewEmployeeNotification($employee));
 
-     
-
         return redirect()->route('employees')->with('success', 'Employee created successfully');
     }
 
     public function show(Request $request, Employee $employee)
     {
-        $employee = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
+        $employee = Employee::join('users', 'employees.user_id', '=', 'users.id')
             ->where('employees.id', $employee->id)
             ->select('employees.*', 'users.name as creator')
             ->first();
-
-        $profileUrl = asset('show-image/' . $employee->profile_image);
-        $employee->profile_url = $profileUrl;
-
-
-        return view('employees.show', ['employee' => new EmployeeResource($employee)]);
+            
+        return view('employees.show', ['employee' => (new EmployeeResource($employee))->resolve()]);
     }
 
     public function edit(Request $request, Employee $employee)
     {
-        $employee = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
+        $employee = Employee::join('users', 'employees.user_id', '=', 'users.id')
             ->where('employees.id', $employee->id)
             ->select('employees.*', 'users.name as creator')
             ->first();
 
- 
-
         return view('employees.edit', ['employee' => new EmployeeResource($employee)]);
     }
 
+    
     public function update(ValidationOfData $request, Employee $employee)
     {
         if ($request->hasFile('profile_image')) {
@@ -113,13 +107,11 @@ class EmployeeController extends Controller
         $data['profile_image'] = $profileImageName;
         $employee->update($data);
 
-
         return redirect()->route('employees')->with('success', 'User updated successfully');
     }
 
     public function destroy(Employee $employee, Request $request)
     {
-
         $image_path = public_path("show-image/") . $employee->profile_image;
 
         if ($employee->profile_image) {
@@ -127,8 +119,6 @@ class EmployeeController extends Controller
         }
 
         $employee->delete();
-
-       
 
         return redirect()->back()->with('success', 'User deleted successfully');
     }

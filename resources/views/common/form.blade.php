@@ -1,3 +1,5 @@
+<input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
+
 <div class="mb-4">
     <label for="name" class="inline-block text-gray-700 text-sm font-bold mb-2">Name</label><span class="text-red-500"> *</span>
     <input
@@ -49,7 +51,7 @@
     <input type="file" value="{{ old('profile_image') ?? ($data->profile_image ?? '') }}" name="profile_image" accept="image/*" id="profile_image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight ">
 </div>
 <div class="inline-block items-center justify-between">
-    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
+    <button type="submit" class="button-click bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
 </div>
 
 <script>

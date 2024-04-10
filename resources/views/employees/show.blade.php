@@ -5,5 +5,5 @@
         </h2>
     </x-slot>
 
-    @include('common.show-data',['data'=>$employee])
+    @include('common.show-data', ['data' => $employee])
 </x-app-layout>

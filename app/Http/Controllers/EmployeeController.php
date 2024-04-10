@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Actions\Employees\CreateEmployee;
+use App\Actions\Employees\DeleteEmployee;
+use App\Actions\Employees\UpdateEmployee;
+use App\Http\Resources\EmployeeResource;
+use App\Http\Requests\ValidationOfData;
 use App\Models\Employee;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use App\Http\Requests\ValidationOfData;
-use App\Http\Resources\EmployeeResource;
-use App\Mail\NewEmployeeNotification;
-use App\Models\User;
-use Illuminate\Support\Facades\Mail;
 
 class EmployeeController extends Controller
 {
@@ -57,15 +58,9 @@ class EmployeeController extends Controller
         $request->user()->update(['active_time' => now()]);
     }
 
-    public function store(ValidationOfData $request)
+    public function store(ValidationOfData $request, CreateEmployee $createEmployee)
     {
-        $data = $request->all();
-
-        $data['profile_image'] = $request->file('profile_image')?->store('uploads');
-
-        $employee = $request->user()->employees()->create($data);
-
-        // Mail::to($request->input('email'))->send(new NewEmployeeNotification($employee));
+        $employee = $createEmployee->create($request->validated());
 
         return redirect()->route('employees')->with('success', 'Employee created successfully');
     }
@@ -76,7 +71,7 @@ class EmployeeController extends Controller
             ->where('employees.id', $employee->id)
             ->select('employees.*', 'users.name as creator')
             ->first();
-            
+
         return view('employees.show', ['employee' => (new EmployeeResource($employee))->resolve()]);
     }
 
@@ -90,35 +85,17 @@ class EmployeeController extends Controller
         return view('employees.edit', ['employee' => new EmployeeResource($employee)]);
     }
 
-    
-    public function update(ValidationOfData $request, Employee $employee)
-    {
-        if ($request->hasFile('profile_image')) {
-            if ($employee->profile_image) {
-                $image_path = public_path("show-image/") . $employee->profile_image;
-                unlink($image_path);
-            }
-            $profileImageName = $request->file('profile_image')?->store('uploads');
-        } else {
-            $profileImageName = $employee->profile_image;
-        }
 
-        $data = $request->all();
-        $data['profile_image'] = $profileImageName;
-        $employee->update($data);
+    public function update(ValidationOfData $request, Employee $employee, UpdateEmployee $updateEmployee)
+    {
+        $employee = $updateEmployee->update($employee, $request->all());
 
         return redirect()->route('employees')->with('success', 'User updated successfully');
     }
 
-    public function destroy(Employee $employee, Request $request)
+    public function destroy(Employee $employee, DeleteEmployee $deleteEmployee)
     {
-        $image_path = public_path("show-image/") . $employee->profile_image;
-
-        if ($employee->profile_image) {
-            unlink($image_path);
-        }
-
-        $employee->delete();
+        $employee = $deleteEmployee->delete($employee);
 
         return redirect()->back()->with('success', 'User deleted successfully');
     }

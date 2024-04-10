@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Admins\CreateUser;
+use App\Actions\Admins\DeleteUser;
+use App\Actions\Admins\UpdateUser;
+use App\Http\Resources\UserResource;
 use App\Http\Requests\ValidationAdmin;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Role;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -51,25 +54,11 @@ class AdminController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function store(ValidationAdmin $request)
+    public function store(ValidationAdmin $request, CreateUser $createUser)
     {
-        $profileImage = $request->file('profile_image')?->store('uploads');
+        $user = $createUser->create($request->validated());
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt('12345678'),
-            'age' => $request->age,
-            'gender' => $request->gender,
-            'profile_image' => $profileImage,
-            'active_time' => now()
-        ]);
-
-        $user->roles()->attach(
-            Role::where('name', 'admin')->first()->id
-        );
-
-        return redirect(route('admins'));
+        return redirect(route('admins'))->with('success','Admin created successfully.');
     }
 
     public function show(User $user)
@@ -80,6 +69,8 @@ class AdminController extends Controller
             ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
             ->groupBy('users.id')
             ->first();
+
+        // dd((new UserResource($user))->resolve());
 
         return view('admins.show', ['user' => (new UserResource($user))->resolve()]);
     }
@@ -97,34 +88,17 @@ class AdminController extends Controller
         return view('admins.edit', ['user' => new UserResource($user)]);
     }
 
-    public function update(ValidationAdmin $request, User $user)
+    public function update(ValidationAdmin $request, User $user, UpdateUser $updateUser)
     {
-        if ($request->hasFile('profile_image')) {
-            if ($user->profile_image) {
-                $image_path = public_path("show-image/") . $user->profile_image;
-                unlink($image_path);
-            }
-            $profileImageName = $request->file('profile_image')?->store('uploads');
-        } else {
-            $profileImageName = $user->profile_image;
-        }
+        $user = $updateUser->update($user, $request->all());
 
-        $data = $request->all();
-        $data['profile_image'] = $profileImageName;
-        $user->update($data);
-
-        return redirect()->route('admins')->with('success', 'User updated successfully');
+        return redirect()->route('admins')->with('success', 'Admin updated successfully');
     }
 
-    public function destroy(User $user)
+    public function destroy(User $user, DeleteUser $deleteUser)
     {
-        $imagePath = public_path('show-image/') . $user->profile_image;
+        $user = $deleteUser->handle($user);
 
-        if ($user->profile_image) {
-            unlink($imagePath);
-        }
-        $user->roles()->detach();
-        $user->delete();
         return redirect()->route('admins')->with('success', 'Admin deleted successfully');
     }
 }

@@ -21,8 +21,9 @@ class AdminController extends Controller
         $roleFilter = $request->input('role');
 
         $data = User::query()
-            ->join('role_user', 'users.id', '=', 'role_user.user_id')
-            ->join('roles', 'roles.id', '=', 'role_user.role_id')
+            ->with('roles')
+            ->leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
+            ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
             ->whereNotIn('users.id', [$request->user()->id])
             ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
             ->groupBy('users.id')
@@ -34,7 +35,7 @@ class AdminController extends Controller
                 return $user->roles->contains('id', $roleFilter);
             });
         }
-
+        // dd(UserResource::collection($data)->resolve());
         return view('admins.index', [
             'data' => UserResource::collection($data)->resolve(),
             'roles' => Role::all(),
@@ -56,14 +57,16 @@ class AdminController extends Controller
 
     public function store(ValidationAdmin $request, CreateUser $createUser)
     {
-        $user = $createUser->create($request->validated());
+        $user = $createUser->create($request->all());   
 
-        return redirect(route('admins'))->with('success','Admin created successfully.');
+        return redirect(route('admins'))->with('success', 'Admin created successfully.');
     }
 
     public function show(User $user)
     {
-        $user = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
+        $user = User::query()
+        ->with('roles')
+        ->join('role_user', 'users.id', '=', 'role_user.user_id')
             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('users.id', $user->id)
             ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
@@ -97,7 +100,7 @@ class AdminController extends Controller
 
     public function destroy(User $user, DeleteUser $deleteUser)
     {
-        $user = $deleteUser->handle($user);
+        $user = $deleteUser->delete($user);
 
         return redirect()->route('admins')->with('success', 'Admin deleted successfully');
     }

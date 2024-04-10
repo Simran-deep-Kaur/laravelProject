@@ -2,11 +2,9 @@
 
 namespace App\Actions\Admins;
 
-use App\Models\User;
-
 class DeleteUser
 {
-    public function handle($user)
+    public function delete($user)
     {
         $imagePath = public_path('show-image/') . $user->profile_image;
 

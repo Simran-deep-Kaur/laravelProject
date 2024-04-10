@@ -37,8 +37,8 @@
                     @if (isset($data['role']))
                         <p class='my-2'>
                             <strong>Role:</strong>
-                            @foreach (explode(',', $data['role']) as $role)
-                                <li>{{ $role }}</li>
+                            @foreach ($data['role'] as $role)
+                                <li>{{ $role['name'] }}</li>
                             @endforeach
                         </p>
                     @endif

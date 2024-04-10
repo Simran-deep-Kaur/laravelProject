@@ -2,14 +2,11 @@
 
 namespace App\Actions\Admins;
 
-use App\Http\Requests\ValidationAdmin;
-use App\Models\User;
-
 class UpdateUser
 {
     public function update($user, array $data)
     {
-        if (array_key_exists('profile_image', $data)) {
+        if (isset($data['profile_image'])) {
             if ($user->profile_image) {
                 $image_path = public_path("show-image/") . $user->profile_image;
                 unlink($image_path);

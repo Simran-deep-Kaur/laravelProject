@@ -9,8 +9,7 @@ class CreateUser
 {
     public function create(array $data)
     {
-        // $profileImage = $request->file('profile_image')?->store('uploads');
-        if (array_key_exists('profile_image', $data)){
+        if (isset($data['profile_image'])) {
             $data['profile_image'] = $data['profile_image']?->store('uploads');
         }
 

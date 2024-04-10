@@ -2,7 +2,6 @@
 
 namespace App\Actions\Employees;
 
-use App\Models\Employee;
 
 class DeleteEmployee
 {

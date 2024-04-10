@@ -60,7 +60,7 @@ class EmployeeController extends Controller
 
     public function store(ValidationOfData $request, CreateEmployee $createEmployee)
     {
-        $employee = $createEmployee->create($request->validated());
+        $employee = $createEmployee->create($request->all());
 
         return redirect()->route('employees')->with('success', 'Employee created successfully');
     }

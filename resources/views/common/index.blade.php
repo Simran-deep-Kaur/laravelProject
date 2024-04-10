@@ -93,13 +93,13 @@
                                 @if (isset($row['role']))
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <ul>
-
-                                            @foreach (explode(',', $row['role']) as $role)
-                                                <li class="list-disc">{{ $role }}</li>
+                                            @foreach ($row['role'] as $role)
+                                                <li class="list-disc">{{ $role['name'] }}</li>
                                             @endforeach
                                         </ul>
                                     </td>
                                 @endif
+
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <a class="button-click inline-block bg-yellow-400 hover:bg-yellow-600 text-dark font-bold py-2 px-4 rounded"
                                         href="{{ $row['show_url'] }}">View</a>

@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\Employee;
 use App\Models\User;
 
-class AuthEmployeePolicy
+class EmployeePolicy
 {
 
     public function view(User $user, Employee $employee): bool

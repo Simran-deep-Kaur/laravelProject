@@ -5,14 +5,14 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class AuthUserPolicy
+class UserPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny($user): bool
     {
-            return $user->hasRole('super-admin');
+        return $user->hasRole('super-admin');
     }
 
     /**

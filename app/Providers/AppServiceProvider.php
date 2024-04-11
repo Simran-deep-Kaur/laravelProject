@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Models\Employee;
 use App\Models\User;
-use App\Policies\AuthUserPolicy;
-use App\Policies\AuthEmployeePolicy;
+use App\Policies\UserPolicy;
+use App\Policies\EmployeePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::policy(Employee::class, AuthEmployeePolicy::class);
+        Gate::policy(Employee::class, EmployeePolicy::class);
 
-        Gate::policy(User::class, AuthUserPolicy::class);
+        Gate::policy(User::class, UserPolicy::class);
     }
 }

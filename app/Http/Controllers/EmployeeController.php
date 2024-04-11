@@ -69,8 +69,6 @@ class EmployeeController extends Controller
 
     public function show(Request $request, Employee $employee)
     {
-        // Gate::authorize('view', $employee);
-
         $employee = Employee::join('users', 'employees.user_id', '=', 'users.id')
             ->where('employees.id', $employee->id)
             ->select('employees.*', 'users.name as creator')
@@ -81,8 +79,6 @@ class EmployeeController extends Controller
 
     public function edit(Request $request, Employee $employee)
     {
-        // Gate::authorize('view', $employee);
-
         $employee = Employee::join('users', 'employees.user_id', '=', 'users.id')
             ->where('employees.id', $employee->id)
             ->select('employees.*', 'users.name as creator')
@@ -94,8 +90,6 @@ class EmployeeController extends Controller
 
     public function update(ValidationOfData $request, Employee $employee, UpdateEmployee $updateEmployee)
     {
-        // Gate::authorize('view', $employee);
-
         $employee = $updateEmployee->update($employee, $request->all());
 
         return redirect()->route('employees')->with('success', 'User updated successfully');
@@ -103,8 +97,6 @@ class EmployeeController extends Controller
 
     public function destroy(Employee $employee, DeleteEmployee $deleteEmployee)
     {
-        // Gate::authorize('view', $employee);
-
         $employee = $deleteEmployee->delete($employee);
 
         return redirect()->back()->with('success', 'User deleted successfully');

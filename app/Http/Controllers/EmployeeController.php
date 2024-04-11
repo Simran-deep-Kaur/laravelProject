@@ -10,6 +10,7 @@ use App\Http\Requests\ValidationOfData;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -17,6 +18,7 @@ class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
+
         $users = User::all();
 
         $employeeQuery = Employee::join('users', 'employees.user_id', '=', 'users.id')
@@ -67,6 +69,8 @@ class EmployeeController extends Controller
 
     public function show(Request $request, Employee $employee)
     {
+        // Gate::authorize('view', $employee);
+
         $employee = Employee::join('users', 'employees.user_id', '=', 'users.id')
             ->where('employees.id', $employee->id)
             ->select('employees.*', 'users.name as creator')
@@ -77,6 +81,8 @@ class EmployeeController extends Controller
 
     public function edit(Request $request, Employee $employee)
     {
+        // Gate::authorize('view', $employee);
+
         $employee = Employee::join('users', 'employees.user_id', '=', 'users.id')
             ->where('employees.id', $employee->id)
             ->select('employees.*', 'users.name as creator')
@@ -88,6 +94,8 @@ class EmployeeController extends Controller
 
     public function update(ValidationOfData $request, Employee $employee, UpdateEmployee $updateEmployee)
     {
+        // Gate::authorize('view', $employee);
+
         $employee = $updateEmployee->update($employee, $request->all());
 
         return redirect()->route('employees')->with('success', 'User updated successfully');
@@ -95,6 +103,8 @@ class EmployeeController extends Controller
 
     public function destroy(Employee $employee, DeleteEmployee $deleteEmployee)
     {
+        // Gate::authorize('view', $employee);
+
         $employee = $deleteEmployee->delete($employee);
 
         return redirect()->back()->with('success', 'User deleted successfully');

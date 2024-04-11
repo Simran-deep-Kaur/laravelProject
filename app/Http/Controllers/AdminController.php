@@ -7,6 +7,7 @@ use App\Actions\Admins\DeleteUser;
 use App\Actions\Admins\UpdateUser;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\ValidationAdmin;
+use App\Models\Employee;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -57,16 +58,16 @@ class AdminController extends Controller
 
     public function store(ValidationAdmin $request, CreateUser $createUser)
     {
-        $user = $createUser->create($request->all());   
+        $user = $createUser->create($request->all());
 
         return redirect(route('admins'))->with('success', 'Admin created successfully.');
     }
 
-    public function show(User $user)
+    public function show(User $user, Employee $employee)
     {
         $user = User::query()
-        ->with('roles')
-        ->join('role_user', 'users.id', '=', 'role_user.user_id')
+            ->with('roles')
+            ->leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
             ->where('users.id', $user->id)
             ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
@@ -77,7 +78,6 @@ class AdminController extends Controller
 
         return view('admins.show', ['user' => (new UserResource($user))->resolve()]);
     }
-
 
     public function edit(User $user)
     {

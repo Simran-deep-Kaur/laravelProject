@@ -7,6 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AuthSuperAdmin;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthUser;
+use App\Models\Employee;
+use App\Models\User;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,28 +22,29 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
-    Route::view('/employees/create', 'employees.create')->name('employee.create');
+    Route::view('/employees/create', 'employees.create')->name('employee.create')->can('view,employee');
     Route::post('/employees/create', [EmployeeController::class, 'store'])->name('employee.store');
-    Route::middleware(AuthUser::class)->group(function () {
-        Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
-        Route::delete('/employees/{employee}/delete', [EmployeeController::class, 'destroy'])->name('employee.destroy');
-        Route::put('/employees/{employee}/update', [EmployeeController::class, 'update'])->name('employee.update');
-        Route::get('/employees/{employee}/show', [EmployeeController::class, 'show'])->name('employee.show');
-    });
+
+   Route::middleware(['can:view,employee'])->group(function () {
+    Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employee.edit');
+    Route::delete('/employees/{employee}/delete', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+    Route::put('/employees/{employee}/update', [EmployeeController::class, 'update'])->name('employee.update');
+    Route::get('/employees/{employee}/show', [EmployeeController::class, 'show'])->name('employee.show');
+   });
 });
 
 Route::post('/employees/validate-email', [EmployeeController::class, 'validateEmail'])->name('employee.validateEmail');
 Route::post('/admins/validate-email', [AdminController::class, 'validateEmail'])->name('admins.validateEmail');
 Route::post('/employees/button-click', [EmployeeController::class, 'buttonClick'])->name('employee.buttonClick');
 
-Route::middleware(AuthSuperAdmin::class)->group(function () {
+Route::middleware(['can:viewAny',User::class])->group(function () {
     Route::view('/admins/create', 'admins.create')->name('admins.create');
-    Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
     Route::get('/admins', [AdminController::class, 'index'])->name('admins');
     Route::get('/admins/{user}/show', [AdminController::class, 'show'])->name('admin.show');
     Route::get('/admins/{user}/edit', [AdminController::class, 'edit'])->name('admin.edit');
     Route::delete('/admins/{user}/delete', [AdminController::class, 'destroy'])->name('admin.destroy');
     Route::put('/admins/{user}/update', [AdminController::class, 'update'])->name('admin.update');
+    Route::post('/admins/create', [AdminController::class, 'store'])->name('admin.store');
 });
 
 Route::get('/markdown', function () {

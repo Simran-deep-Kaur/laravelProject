@@ -9,7 +9,7 @@
         <form enctype="multipart/form-data" method="POST" action="{{ route('employee.store') }}"
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             @csrf
-            @include ('common.form', ['url' => route('employee.validateEmail')])
+            @include ('shared.form', ['url' => route('employee.validateEmail')])
         </form>
     </div>
 </x-app-layout>

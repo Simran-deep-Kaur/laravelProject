@@ -21,25 +21,28 @@ class AdminController extends Controller
     {
         $roleFilter = $request->input('role');
 
-        $data = User::query()
+        $query = User::query()
             ->with('roles')
             ->leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
             ->whereNotIn('users.id', [$request->user()->id])
             ->select('users.*', DB::raw('GROUP_CONCAT(roles.name) as role'))
             ->groupBy('users.id')
-            ->orderBy('users.created_at', 'desc')
-            ->get();
+            ->orderBy('users.created_at', 'desc');
+
 
         if ($roleFilter && $roleFilter !== "all") {
-            $data = $data->filter(function ($user) use ($roleFilter) {
-                return $user->roles->contains('id', $roleFilter);
+            $query->whereHas('roles', function ($query) use ($roleFilter) {
+                $query->where('role_id', $roleFilter);
             });
         }
-        // dd(UserResource::collection($data)->resolve());
+        $data = $query->paginate(5);
+        $data->appends(['role' => $roleFilter]);
+
         return view('admins.index', [
             'data' => UserResource::collection($data)->resolve(),
             'roles' => Role::all(),
+            'employees' => $data
         ]);
     }
 

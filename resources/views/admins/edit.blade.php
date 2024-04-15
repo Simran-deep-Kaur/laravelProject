@@ -10,7 +10,7 @@
             class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             @csrf
             @method('PUT')
-            @include('common.form', ['data' => $user, 'url' => route('admins.validateEmail')])
+            @include('shared.form', ['data' => $user, 'url' => route('admins.validateEmail')])
         </form>
     </div>
 </x-app-layout>

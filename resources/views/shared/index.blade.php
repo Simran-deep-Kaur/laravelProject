@@ -1,7 +1,9 @@
-<div class="py-10">
+
+<div class="py-10 ">
     <div class=" max-w-8xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <div style="  overflow-x:scroll"
+                class="p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
 
                     <input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
@@ -15,60 +17,45 @@
 
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 Profile Image
                             </th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 Name
                             </th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 Email
                             </th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 Gender
                             </th>
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 Age
                             </th>
                             @if (isset($data[0]['creator']))
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                     Creator
                                 </th>
                             @endif
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 Date
                             </th>
                             @if (isset($data[0]['role']))
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                     Role
                                 </th>
                             @endif
-                            <th
-                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
                                 Status
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
+                    <tbody id="employeeTableBody" class="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach ($data as $row)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if ($row['profile_url'] && Str::contains($row['profile_url'], '/show-image/'))
-                                        <img style="max-width:50px; border-radius: 50%" src="{{ $row['profile_url'] }}"
-                                            alt="profile image" />
-                                    @else
-                                        <img style="max-width:50px; border-radius: 50%"
-                                            src="{{ asset('storage/uploads/image2.png') }}" alt="default profile image"
-                                            title="No image uploaded" />
-                                    @endif
+                                    <img style="max-width:50px; border-radius: 50%" src="{{ $row['profile_url'] }}"
+                                        alt="profile image" />
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     {{ $row['name'] }}
@@ -119,6 +106,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                    {{ $employees->links('vendor.pagination.tailwind') }}
             </div>
         </div>
     </div>

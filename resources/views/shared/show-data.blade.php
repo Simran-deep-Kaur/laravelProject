@@ -4,7 +4,7 @@
             <div
                 class="p-6 m-6 border rounded-md bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 ">
                 <div class="flex justify-center">
-                    <img title="{{ $data['profile_url'] }}" style="border-radius: 50%; max-width:100px"
+                    <img style="border-radius: 50%; max-width:100px"
                         src="{{ $data['profile_url'] }}" alt="">
                 </div>
                 <div class="my-6">

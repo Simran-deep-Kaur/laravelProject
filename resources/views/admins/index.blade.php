@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-    @include('common.index')
+    @include('shared.index')
     </div>
 
 </x-app-layout>

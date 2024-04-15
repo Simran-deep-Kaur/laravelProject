@@ -4,11 +4,8 @@ require __DIR__ . '/auth.php';
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Middleware\AuthSuperAdmin;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\AuthUser;
-use App\Models\Employee;
-use App\Models\User;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,7 +19,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/employees', [EmployeeController::class, 'index'])->name('employees');
-    Route::view('/employees/create', 'employees.create')->name('employee.create')->can('view,employee');
+    Route::view('/employees/create', 'employees.create')->name('employee.create');
     Route::post('/employees/create', [EmployeeController::class, 'store'])->name('employee.store');
 
    Route::middleware(['can:view,employee'])->group(function () {
@@ -33,11 +30,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
    });
 });
 
+// Route::get('/employees/search',[EmployeeController::class,'search'])->name('employees.search');
 Route::post('/employees/validate-email', [EmployeeController::class, 'validateEmail'])->name('employee.validateEmail');
 Route::post('/admins/validate-email', [AdminController::class, 'validateEmail'])->name('admins.validateEmail');
 Route::post('/employees/button-click', [EmployeeController::class, 'buttonClick'])->name('employee.buttonClick');
 
-Route::middleware(['can:viewAny',User::class])->group(function () {
+Route::middleware(['can:viewAny,App\Models\User'])->group(function () {
     Route::view('/admins/create', 'admins.create')->name('admins.create');
     Route::get('/admins', [AdminController::class, 'index'])->name('admins');
     Route::get('/admins/{user}/show', [AdminController::class, 'show'])->name('admin.show');
@@ -50,3 +48,6 @@ Route::middleware(['can:viewAny',User::class])->group(function () {
 Route::get('/markdown', function () {
     return view('admins.first-file');
 });
+
+Route::get('/employees/filter', [EmployeeController::class, 'filterEmployees'])->name('employees.filter');
+Route::get('/employees/search', [EmployeeController::class,'searchEmployees'])->name('employees.search');

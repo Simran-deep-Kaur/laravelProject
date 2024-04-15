@@ -5,5 +5,5 @@
         </h2>
     </x-slot>
 
-    @include('common.show-data', ['data' => $user])
+    @include('shared.show-data', ['data' => $user])
 </x-app-layout>
